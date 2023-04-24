@@ -8,7 +8,12 @@ class TodoItem{
         this.element = element
     }
     createDOMElement(){
-
+        let newTodoElement = document.createElement('div');
+        newTodoElement.classList.add("todo");
+        let todoInput = document.createElement('input');
+        todoInput.type = "checkbox";
+        todoInput.classList.add('todo-checkbox')
+        newTodoElement.appendChild(todoInput) 
     }
     updateDOMElement(){
 
