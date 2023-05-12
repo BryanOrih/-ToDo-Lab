@@ -1,10 +1,11 @@
-const form = document.querySelector("form")
+const form = document.querySelector("#todo-form")
+
 const ul = document.querySelector('ul')
 
 class TodoItem{
     constructor(id, text, isCompleted){
         this.id = id;
-        this.text = text.textContent;
+        this.text = text;
         this.isCompleted = isCompleted
         this.element = this.createDOMElement();
     }
@@ -31,7 +32,7 @@ class TodoItem{
         deleteButton.textContent = 'Delete';
         //
         deleteButton.addEventListener('click', () => {
-            
+            ul.removeChild(this.element)
         });
         li.appendChild(deleteButton);
         
@@ -46,32 +47,72 @@ class TodoItem{
 
     }
 }
-class TodoList{
-    constructor(element){
-        this.items = [];
-        this.element = element;
-    }
-    add(text){
-        let newToDo = new TodoItem(Math.random(), text, false)
-        this.items.push(newToDo)
-        this.element.innerHTML += `<li>${text}</li>`
-    }
-    remove(id){
+// class TodoList{
+//     constructor(element){
+//         this.items = [];
+//         this.element = element;
+//     }
+//     add(text){
+//         let newToDo = new TodoItem(Math.random(), text, false)
+//         this.items.push(newToDo)
+//         this.element.innerHTML += `<li>${text}</li>`
+//     }
+//     remove(id){
 
-    }
-    update(id, updates){
+//     }
+//     update(id, updates){
 
+//     }
+// }
+
+class TodoList {
+    constructor() {
+      this.items = [];
+      this.element = document.getElementById('todo-list');
+    }
+    
+    add(inputValue) {
+        console.log(inputValue);
+      const input = document.getElementById('todo-input');
+      const text = inputValue.trim();
+      if (text.length === 0) return;
+      
+      const id = Date.now().toString();
+      const item = new TodoItem(id, text, false);
+      this.items.push(item);
+        ul.appendChild(item.element);
+      inputValue = '';
+    }
+    
+    remove(event) {
+      const id = event.detail;
+      const index = this.items.findIndex(item => item.id === id);
+      if (index === -1) return;
+      
+      const item = this.items[index];
+      this.element.removeChild(item.element);
+      this.items.splice(index, 1);
+    }
+    
+    update(id, updates) {
+      const item = this.items.find(item => item.id === id);
+      if (!item) return;
+      
+      Object.assign(item, updates);
+      item.updateDOMElement();
     }
 }
 
 // list.appendChild(TodoItem.createDOMElement())
 let homeToDo = new TodoList(ul)
 
-homeToDo.add("Do Laundry")
 
+console.log(form);
 
 form.addEventListener('submit', (e) =>{
     e.preventDefault()
-    let input = form[0].value
-    TodoList.add(input)  
+    let input = form.children[0].value
+    console.log(input);
+    homeToDo.add(input)  
 })
+
